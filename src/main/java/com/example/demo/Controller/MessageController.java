@@ -1,11 +1,18 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Model.Conversation;
 import com.example.demo.Model.Message;
+import com.example.demo.Model.User;
+import com.example.demo.Repository.ConversationRepository;
+import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/messages")
@@ -14,7 +21,7 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    @PostMapping
+    @PostMapping("/send")
     public Message sendMessage(@RequestBody Message message) {
         return messageService.sendMessage(message);
     }
