@@ -18,8 +18,15 @@ public class MediaController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadMedia(@RequestParam("file") MultipartFile file) throws IOException {
+        System.out.println("Received request: " + file);
+        //log the file upload
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("File is empty");
+        }
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         File dest = new File(uploadDir, filename);
+        //log the destination path
+        System.out.println("Saving file to: " + dest.getAbsolutePath());
         dest.getParentFile().mkdirs();
         file.transferTo(dest);
         // Return the static URL to access the file
