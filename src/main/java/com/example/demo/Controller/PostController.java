@@ -1,7 +1,12 @@
 package com.example.demo.Controller;
 
+import com.example.demo.DTO.PostResponseDTO;
 import com.example.demo.Model.Post;
+import com.example.demo.Model.User;
 import com.example.demo.Service.PostService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +34,15 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        System.out.println("Get all posts endpoint called");
-        List<Post> posts = postService.getAllPosts();
+    public ResponseEntity<List<PostResponseDTO>> getAllPosts(HttpServletRequest request) {
+        User currentUser = (User) request.getAttribute("currentUser");
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body(null); // Unauthorized if no user is set
+        }
+        List<PostResponseDTO> posts = postService.getAllPosts(currentUser.getId());
+        if(posts.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(posts);
     }
 
@@ -48,5 +59,12 @@ public class PostController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<PostResponseDTO>> getPostsByUsername(@PathVariable String username) {
+        List<PostResponseDTO> posts = postService.getPostsByUsername(username);
+        
+        return ResponseEntity.ok(posts);
     }
 }

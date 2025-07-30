@@ -1,11 +1,15 @@
 package com.example.demo.Controller;
 
+import com.example.demo.DTO.ReactionListResponseDTO;
+import com.example.demo.DTO.ReactionResponseDTO;
 import com.example.demo.Model.Reaction;
 import com.example.demo.Service.ReactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -21,7 +25,7 @@ public class ReactionController {
     }
 
     @GetMapping("/post/{postId}")
-    public List<Reaction> getReactionsByPost(@PathVariable Long postId) {
+    public ReactionListResponseDTO getReactionsByPost(@PathVariable Long postId) {
         return reactionService.getReactionsByPostId(postId);
     }
 
@@ -31,8 +35,16 @@ public class ReactionController {
     }
 
     @PostMapping
-    public Reaction createReaction(@RequestBody Reaction reaction) {
-        return reactionService.createOrUpdateReaction(reaction);
+    public ResponseEntity<?> createReaction(@RequestBody Reaction reaction) {
+        Reaction reactionCreated = reactionService.createOrUpdateReaction(reaction);
+
+        if (reactionCreated == null) {
+            // Reaction was removed (unliked)
+            return ResponseEntity.ok(Map.of("status", "deleted"));
+        }
+
+        // Reaction was created or updated
+        return ResponseEntity.ok(reactionCreated);
     }
 
     @DeleteMapping("/{id}")

@@ -51,10 +51,10 @@ public class Reaction {
     public void setReactionType(String reactionType) {
         this.reactionType = reactionType;
     }
-    public LocalDateTime getCreatedAt() {
+    public LocalDateTime getTimeStamp() {
         return timestamp;
     }
-    public void setCreatedAt(LocalDateTime timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 }

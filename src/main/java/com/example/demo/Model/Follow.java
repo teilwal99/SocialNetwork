@@ -15,14 +15,13 @@ public class Follow {
     private Long id;
 
     // Requester: the one who sends the follow request
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "requester_id", nullable = false)
-    private User requester;
+   
+    @Column(name = "requester_id")
+    private Long requesterId;
 
     // Target: the user being followed
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_id", nullable = false)
-    private User target;
+    @Column(name = "target_id")
+    private Long targetId;
 
     // 0 = pending, 1 = accepted, 2 = rejected (you can adjust)
     @Column(nullable = false)
@@ -35,20 +34,20 @@ public class Follow {
         return id;
     }
 
-    public User getRequester() {
-        return requester;
+    public Long getRequesterId() {
+        return requesterId;
     }
 
-    public void setRequester(User requester) {
-        this.requester = requester;
+    public void setRequesterId(Long requesterId) {
+        this.requesterId = requesterId;
     }
 
-    public User getTarget() {
-        return target;
+    public Long getTargetId() {
+        return targetId;
     }
 
-    public void setTarget(User target) {
-        this.target = target;
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
     }
 
     public Integer getStatus() {

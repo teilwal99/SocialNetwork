@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.DTO.ConversationResponseDTO;
 import com.example.demo.Model.Conversation;
 import com.example.demo.Model.Message;
 import com.example.demo.Model.User;
@@ -7,6 +8,7 @@ import com.example.demo.Repository.ConversationRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -39,5 +41,11 @@ public class MessageController {
     @GetMapping("/conversation")
     public List<Message> getConversation(@RequestParam Long sender, @RequestParam Long receiver) {
         return messageService.getMessagesBetweenUsers(sender, receiver);
+    }
+
+    @GetMapping("/followers/{userId}")
+    public ResponseEntity<?> getFollowers(@PathVariable Long userId) {
+        List<ConversationResponseDTO> convs = messageService.getFollowers(userId);
+        return ResponseEntity.ok(convs);
     }
 }

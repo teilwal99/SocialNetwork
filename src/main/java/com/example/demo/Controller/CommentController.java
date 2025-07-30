@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.DTO.CommentResponseDTO;
 import com.example.demo.Model.Comment;
 import com.example.demo.Service.CommentService;
 
@@ -28,11 +29,15 @@ public class CommentController {
         return ResponseEntity.ok(createdComment);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
-        return commentService.getCommentById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> getCommentByPostId(@PathVariable Long postId) {
+        List<CommentResponseDTO> comments = commentService.getCommentByPostId(postId);
+        if(comments.isEmpty()){
+            return ResponseEntity.status(404).body("Comment with id " + postId + " not found");
+        }else{
+            return ResponseEntity.ok().body(comments);
+        }
+        
     }
 
     @GetMapping

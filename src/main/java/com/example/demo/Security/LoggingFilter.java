@@ -1,4 +1,4 @@
-/* package com.example.demo.Security;
+package com.example.demo.Security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,4 +25,4 @@ public class LoggingFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-} */
+}

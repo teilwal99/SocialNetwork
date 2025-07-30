@@ -13,7 +13,20 @@ public class JwtUtil {
 
     // Add methods to extract username and validate token
     public String extractUsername(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser()
+            .setSigningKey(SECRET_KEY)
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public boolean validateToken(String token) {

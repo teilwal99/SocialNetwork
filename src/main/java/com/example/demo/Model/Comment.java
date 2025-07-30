@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 
 @Entity
 public class Comment {
@@ -19,7 +20,10 @@ public class Comment {
     @Column(name = "post_id")
     private Long postId;
     private LocalDateTime timestamp;
-
+    @PrePersist
+    protected void onCreate() {
+        this.timestamp = LocalDateTime.now();
+    }
     public Comment() {
     }
     // Getters and Setters

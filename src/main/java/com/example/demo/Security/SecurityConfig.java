@@ -11,19 +11,31 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer; // <-- IMPORTANT
 
+import com.example.demo.Service.UserService;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
-public class SecurityConfig implements WebMvcConfigurer { 
+public class SecurityConfig implements WebMvcConfigurer {
+
     @Autowired
     private JwtUtil jwtUtil;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+    public JwtAuthFilter jwtAuthFilter(UserService userService) {
+        return new JwtAuthFilter(userService, jwtUtil);
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
+        http
+            .cors(withDefaults())
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login", "/auth/register", "/media/**", "/uploads/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -36,6 +48,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/media/**")
-                .addResourceLocations("file:uploads/"); // Ensure this matches your directory
+                .addResourceLocations("file:uploads/");
     }
 }
+

@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.DTO.ConversationDTO;
 import com.example.demo.Model.Conversation;
 import com.example.demo.Service.ConversationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class ConversationController {
     private ConversationService conversationService;
 
     @GetMapping("/user/{userId}")
-    public List<Conversation> getUserConversations(@PathVariable Long userId) {
+    public List<ConversationDTO> getUserConversations(@PathVariable Long userId) {
         return conversationService.getUserConversations(userId);
     }
 }
